@@ -8,13 +8,20 @@
 import Foundation
 
 protocol MainViewModelInterface {
-    
+    func showMapScreen()
+    func showSearchScreen()
 }
 
 class MainViewModel: NSObject, MainViewModelInterface {
     
     weak var coordinator: MainCoordinatorInteface?
     
+    func showMapScreen() {
+        coordinator?.showMapScreen()
+    }
     
+    func showSearchScreen() {
+        coordinator?.showSearchScreen()
+    }
     
 }
