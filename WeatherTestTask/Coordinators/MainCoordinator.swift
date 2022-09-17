@@ -13,7 +13,8 @@ protocol Coordinator: AnyObject {
 }
 
 protocol MainCoordinatorInteface: Coordinator {
-    
+    func goBack()
+    func showMapScreen()
 }
 
 class MainCoordinator: MainCoordinatorInteface {
@@ -30,6 +31,24 @@ class MainCoordinator: MainCoordinatorInteface {
     required init(navigationController: UINavigationController) {
         self.navigationController = navigationController
         self.navigationController.navigationBar.isHidden = true
+    }
+    
+    func goBack() {
+        navigationController.popViewController(animated: true)
+    }
+    
+    func showMapScreen() {
+        let viewModel = MapViewModel()
+        let viewController = MapViewController(viewModel: viewModel)
+        viewModel.coordinator = self
+        navigationController.pushViewController(viewController, animated: true)
+    }
+    
+    func showSearchScreen() {
+        let viewModel = SearchViewModel()
+        let viewController = SearchViewController(viewModel: viewModel)
+        viewModel.coordinator = self
+        navigationController.pushViewController(viewController, animated: true)
     }
     
     
