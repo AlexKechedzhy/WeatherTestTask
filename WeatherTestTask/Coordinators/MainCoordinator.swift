@@ -44,6 +44,13 @@ class MainCoordinator: MainCoordinatorInteface {
         navigationController.pushViewController(viewController, animated: true)
     }
     
+    func showSearchScreen() {
+        let viewModel = SearchViewModel()
+        let viewController = SearchViewController(viewModel: viewModel)
+        viewModel.coordinator = self
+        navigationController.pushViewController(viewController, animated: true)
+    }
+    
     
 }
 
