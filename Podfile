@@ -9,5 +9,6 @@ target 'WeatherTestTask' do
 
    pod 'R.swift'
    pod 'SnapKit', '~> 4.0.0'
+   pod 'Alamofire'
 
 end
