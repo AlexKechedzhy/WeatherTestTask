@@ -22,6 +22,8 @@
 		3469B8F928D5B7B900ADB7BF /* IconButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3469B8F828D5B7B900ADB7BF /* IconButton.swift */; };
 		3469B8FC28D5C0BC00ADB7BF /* WebManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3469B8FB28D5C0BC00ADB7BF /* WebManager.swift */; };
 		3469B90028D5C7AE00ADB7BF /* WeatherDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3469B8FF28D5C7AE00ADB7BF /* WeatherDataModel.swift */; };
+		348DCEC928D8D007008C4879 /* UITableView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348DCEC828D8D007008C4879 /* UITableView+Extension.swift */; };
+		348DCECB28D8D070008C4879 /* UICollectionView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348DCECA28D8D070008C4879 /* UICollectionView+Extension.swift */; };
 		BF49C29A5F517288300F71A7 /* Pods_WeatherTestTask.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5D49571EED26F98D54A5879 /* Pods_WeatherTestTask.framework */; };
 /* End PBXBuildFile section */
 
@@ -43,6 +45,8 @@
 		3469B8F828D5B7B900ADB7BF /* IconButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconButton.swift; sourceTree = "<group>"; };
 		3469B8FB28D5C0BC00ADB7BF /* WebManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebManager.swift; sourceTree = "<group>"; };
 		3469B8FF28D5C7AE00ADB7BF /* WeatherDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherDataModel.swift; sourceTree = "<group>"; };
+		348DCEC828D8D007008C4879 /* UITableView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Extension.swift"; sourceTree = "<group>"; };
+		348DCECA28D8D070008C4879 /* UICollectionView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Extension.swift"; sourceTree = "<group>"; };
 		849A282840F818B53678EC73 /* Pods-WeatherTestTask.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeatherTestTask.release.xcconfig"; path = "Target Support Files/Pods-WeatherTestTask/Pods-WeatherTestTask.release.xcconfig"; sourceTree = "<group>"; };
 		D325E2A6F123202626E9B983 /* Pods-WeatherTestTask.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeatherTestTask.debug.xcconfig"; path = "Target Support Files/Pods-WeatherTestTask/Pods-WeatherTestTask.debug.xcconfig"; sourceTree = "<group>"; };
 		F5D49571EED26F98D54A5879 /* Pods_WeatherTestTask.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WeatherTestTask.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -91,6 +95,7 @@
 		3414358E28D23E0E00D43979 /* WeatherTestTask */ = {
 			isa = PBXGroup;
 			children = (
+				348DCEC728D8CFEE008C4879 /* Extensions */,
 				3469B8FE28D5C79F00ADB7BF /* Models */,
 				3469B8FA28D5C0A400ADB7BF /* Managers */,
 				3469B8F728D5B7A900ADB7BF /* Views */,
@@ -172,6 +177,15 @@
 				3469B8FF28D5C7AE00ADB7BF /* WeatherDataModel.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		348DCEC728D8CFEE008C4879 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				348DCEC828D8D007008C4879 /* UITableView+Extension.swift */,
+				348DCECA28D8D070008C4879 /* UICollectionView+Extension.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		BD3E908F8094CACF277EFB4B /* Frameworks */ = {
@@ -321,9 +335,11 @@
 				3469B8F428D5B1D700ADB7BF /* SearchViewController.swift in Sources */,
 				341435A828D242B200D43979 /* MainCoordinator.swift in Sources */,
 				3469B90028D5C7AE00ADB7BF /* WeatherDataModel.swift in Sources */,
+				348DCECB28D8D070008C4879 /* UICollectionView+Extension.swift in Sources */,
 				341435A528D241BC00D43979 /* R.generated.swift in Sources */,
 				3469B8F628D5B1F000ADB7BF /* SearchViewModel.swift in Sources */,
 				341435AE28D2463200D43979 /* MainViewModel.swift in Sources */,
+				348DCEC928D8D007008C4879 /* UITableView+Extension.swift in Sources */,
 				3469B8FC28D5C0BC00ADB7BF /* WebManager.swift in Sources */,
 				3469B8F928D5B7B900ADB7BF /* IconButton.swift in Sources */,
 				3469B8EF28D5B0AB00ADB7BF /* MapViewController.swift in Sources */,
