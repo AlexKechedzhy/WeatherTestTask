@@ -15,6 +15,7 @@
 		341435A528D241BC00D43979 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341435A428D241BC00D43979 /* R.generated.swift */; };
 		341435A828D242B200D43979 /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341435A728D242B200D43979 /* MainCoordinator.swift */; };
 		341435AE28D2463200D43979 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341435AD28D2463200D43979 /* MainViewModel.swift */; };
+		3451C4BB28DF77FD005B0B80 /* GeocodingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3451C4BA28DF77FD005B0B80 /* GeocodingManager.swift */; };
 		3469B8EF28D5B0AB00ADB7BF /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3469B8EE28D5B0AB00ADB7BF /* MapViewController.swift */; };
 		3469B8F128D5B0B300ADB7BF /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3469B8F028D5B0B300ADB7BF /* MapViewModel.swift */; };
 		3469B8F428D5B1D700ADB7BF /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3469B8F328D5B1D700ADB7BF /* SearchViewController.swift */; };
@@ -40,6 +41,7 @@
 		341435A428D241BC00D43979 /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = "<group>"; };
 		341435A728D242B200D43979 /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
 		341435AD28D2463200D43979 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		3451C4BA28DF77FD005B0B80 /* GeocodingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeocodingManager.swift; sourceTree = "<group>"; };
 		3469B8EE28D5B0AB00ADB7BF /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		3469B8F028D5B0B300ADB7BF /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		3469B8F328D5B1D700ADB7BF /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
@@ -173,6 +175,7 @@
 			isa = PBXGroup;
 			children = (
 				3469B8FB28D5C0BC00ADB7BF /* WebManager.swift */,
+				3451C4BA28DF77FD005B0B80 /* GeocodingManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -376,6 +379,7 @@
 				3469B8F928D5B7B900ADB7BF /* IconButton.swift in Sources */,
 				3469B8EF28D5B0AB00ADB7BF /* MapViewController.swift in Sources */,
 				3469B8F128D5B0B300ADB7BF /* MapViewModel.swift in Sources */,
+				3451C4BB28DF77FD005B0B80 /* GeocodingManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
