@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3413736E28E066590032A42A /* WeatherImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3413736D28E066590032A42A /* WeatherImageManager.swift */; };
 		3414359028D23E0E00D43979 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3414358F28D23E0E00D43979 /* AppDelegate.swift */; };
 		3414359228D23E0E00D43979 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3414359128D23E0E00D43979 /* SceneDelegate.swift */; };
 		3414359428D23E0E00D43979 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3414359328D23E0E00D43979 /* MainViewController.swift */; };
@@ -32,6 +33,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3413736D28E066590032A42A /* WeatherImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherImageManager.swift; sourceTree = "<group>"; };
 		3414358C28D23E0E00D43979 /* WeatherTestTask.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeatherTestTask.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3414358F28D23E0E00D43979 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3414359128D23E0E00D43979 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -187,6 +189,7 @@
 			children = (
 				3469B8FB28D5C0BC00ADB7BF /* WebManager.swift */,
 				3451C4BA28DF77FD005B0B80 /* GeocodingManager.swift */,
+				3413736D28E066590032A42A /* WeatherImageManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -387,6 +390,7 @@
 				348DCEF828DA4A06008C4879 /* DailyWeatherTableViewCell.swift in Sources */,
 				348DCEF528DA2C6D008C4879 /* HourlyWeatherCollectionViewCell.swift in Sources */,
 				348DCEC928D8D007008C4879 /* UITableView+Extension.swift in Sources */,
+				3413736E28E066590032A42A /* WeatherImageManager.swift in Sources */,
 				3469B8FC28D5C0BC00ADB7BF /* WebManager.swift in Sources */,
 				3469B8F928D5B7B900ADB7BF /* IconButton.swift in Sources */,
 				3469B8EF28D5B0AB00ADB7BF /* MapViewController.swift in Sources */,
