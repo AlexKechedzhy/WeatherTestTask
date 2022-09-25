@@ -15,6 +15,7 @@ protocol Coordinator: AnyObject {
 protocol MainCoordinatorInteface: Coordinator {
     func goBack()
     func showMapScreen()
+    func showSearchScreen()
 }
 
 class MainCoordinator: MainCoordinatorInteface {
