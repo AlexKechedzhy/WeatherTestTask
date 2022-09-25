@@ -12,7 +12,7 @@ class WeatherDetailView: UIView {
     private let primaryImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = R.color.accentColor()
+        imageView.tintColor = R.color.white()
         return imageView
     }()
     
@@ -26,7 +26,7 @@ class WeatherDetailView: UIView {
     private let secondaryImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = R.color.accentColor()
+        imageView.tintColor = R.color.white()
         return imageView
     }()
     

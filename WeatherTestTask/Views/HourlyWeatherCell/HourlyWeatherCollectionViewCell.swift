@@ -13,7 +13,7 @@ class HourlyWeatherCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.textColor = R.color.white()
         label.font = UIFont.systemFont(ofSize: 22)
-        label.text = "17"
+//        label.text = "01"
         return label
     }()
     
@@ -21,13 +21,13 @@ class HourlyWeatherCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.textColor = R.color.white()
         label.font = UIFont.systemFont(ofSize: 14)
-        label.text = "00"
+//        label.text = "00"
         return label
     }()
     
     private let weatherImageView: UIImageView = {
-        let image = R.image.icon_white_day_cloudy()?.withRenderingMode(.alwaysTemplate)
-        let imageView = UIImageView(image: image)
+//        let image = R.image.icon_white_day_cloudy()?.withRenderingMode(.alwaysTemplate)
+        let imageView = UIImageView()
         imageView.tintColor = R.color.white()
         imageView.contentMode = .scaleAspectFit
         return imageView
@@ -37,7 +37,7 @@ class HourlyWeatherCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.textColor = R.color.white()
         label.font = UIFont.systemFont(ofSize: 22)
-        label.text = "27°"
+//        label.text = "27°"
         return label
     }()
     
@@ -61,7 +61,7 @@ class HourlyWeatherCollectionViewCell: UICollectionViewCell {
     private func configureHourLabel() {
         addSubview(hourLabel)
         hourLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(16)
+            $0.top.equalToSuperview().inset(24)
             $0.leading.equalToSuperview().inset(20)
         }
     }
@@ -69,7 +69,7 @@ class HourlyWeatherCollectionViewCell: UICollectionViewCell {
     private func configureMinuteLabel() {
         addSubview(minuteLabel)
         minuteLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(18)
+            $0.top.equalTo(hourLabel.snp.top).inset(2)
             $0.leading.equalTo(hourLabel.snp.trailing)
         }
     }
@@ -92,5 +92,10 @@ class HourlyWeatherCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    public func set(hours: String?, weatherImage: UIImage?, temperature: String?) {
+        hourLabel.text = hours
+        weatherImageView.image = weatherImage
+        temperatureLabel.text = temperature
+    }
     
 }
