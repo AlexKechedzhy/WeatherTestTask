@@ -14,7 +14,7 @@ protocol Coordinator: AnyObject {
 
 protocol MainCoordinatorInteface: Coordinator {
     func goBack()
-    func showMapScreen()
+    func showMapScreen(delegate: MapViewControllerDelegate)
     func showSearchScreen()
 }
 
@@ -38,9 +38,9 @@ class MainCoordinator: MainCoordinatorInteface {
         navigationController.popViewController(animated: true)
     }
     
-    func showMapScreen() {
+    func showMapScreen(delegate: MapViewControllerDelegate) {
         let viewModel = MapViewModel()
-        let viewController = MapViewController(viewModel: viewModel)
+        let viewController = MapViewController(viewModel: viewModel, delegate: delegate)
         viewModel.coordinator = self
         navigationController.pushViewController(viewController, animated: true)
     }
