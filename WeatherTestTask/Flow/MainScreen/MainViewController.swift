@@ -10,13 +10,13 @@ import UIKit
 class MainViewController: UIViewController {
     
     private lazy var mapButton: IconButton = {
-        let button = IconButton(icon: R.image.icon_my_location())
+        let button = IconButton(icon: R.image.icon_my_location(), size: 32)
         button.addTarget(self, action: #selector(mapButtonPressed), for: .touchUpInside)
         return button
     }()
     
     private lazy var searchButton: IconButton = {
-        let button = IconButton(icon: R.image.icon_search())
+        let button = IconButton(icon: R.image.icon_search(), size: 32)
         button.addTarget(self, action: #selector(searchButtonPressed), for: .touchUpInside)
         return button
     }()
@@ -233,11 +233,17 @@ class MainViewController: UIViewController {
 
 
     @objc private func mapButtonPressed() {
-        viewModel.showMapScreen()
+        viewModel.showMapScreen(delegate: self)
     }
     
     @objc private func searchButtonPressed() {
         viewModel.showSearchScreen()
+    }
+}
+
+extension MainViewController: MapViewControllerDelegate {
+    func userDidChooseCoordinates(latitude: Double, longitude: Double) {
+        viewModel.getDataForCoordinates(latitude: latitude, longitude: longitude)
     }
 }
 
