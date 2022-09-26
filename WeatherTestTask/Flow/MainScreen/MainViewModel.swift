@@ -21,7 +21,8 @@ protocol MainViewModelInterface: TableViewAdapter, CollectionViewAdapter {
     var updateTemperatureDetailViewBlock: ((String?) -> Void)? { get set }
     var updateHumidityDetailViewBlock: ((String?) -> Void)? { get set }
     var updateWindDetailViewBlock: ((String?, UIImage?) -> Void)? { get set }
-    func showMapScreen()
+    func getDataForCoordinates(latitude: Double, longitude: Double)
+    func showMapScreen(delegate: MapViewControllerDelegate)
     func showSearchScreen()
     func requestCurrentLocation()
 }
@@ -53,8 +54,13 @@ class MainViewModel: NSObject, MainViewModelInterface {
         locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
     }
     
-    func showMapScreen() {
-        coordinator?.showMapScreen()
+    func getDataForCoordinates(latitude: Double, longitude: Double) {
+        getCityNameByCoordinates(lat: latitude, lon: longitude)
+        getWeatherDataByCoordinates(lat: latitude, lon: longitude)
+    }
+    
+    func showMapScreen(delegate: MapViewControllerDelegate) {
+        coordinator?.showMapScreen(delegate: delegate)
     }
     
     func showSearchScreen() {
@@ -129,10 +135,7 @@ extension MainViewModel: CLLocationManagerDelegate {
         locationManager.stopUpdatingLocation()
         let currentLatitude = location.coordinate.latitude as Double
         let currentLongitude = location.coordinate.longitude as Double
-        
-        getCityNameByCoordinates(lat: currentLatitude, lon: currentLongitude)
-        getWeatherDataByCoordinates(lat: currentLatitude, lon: currentLongitude)
-
+        getDataForCoordinates(latitude: currentLatitude, longitude: currentLongitude)
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {

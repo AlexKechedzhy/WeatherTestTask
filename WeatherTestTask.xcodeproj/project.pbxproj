@@ -131,8 +131,8 @@
 		341435A928D245F500D43979 /* Flow */ = {
 			isa = PBXGroup;
 			children = (
-				3469B8F228D5B1C000ADB7BF /* SearchViewScreen */,
-				3469B8ED28D5B06D00ADB7BF /* MapViewScreen */,
+				3469B8F228D5B1C000ADB7BF /* SearchScreen */,
+				3469B8ED28D5B06D00ADB7BF /* MapScreen */,
 				341435AC28D2460A00D43979 /* MainScreen */,
 			);
 			path = Flow;
@@ -155,22 +155,22 @@
 			path = WeatherDetailView;
 			sourceTree = "<group>";
 		};
-		3469B8ED28D5B06D00ADB7BF /* MapViewScreen */ = {
+		3469B8ED28D5B06D00ADB7BF /* MapScreen */ = {
 			isa = PBXGroup;
 			children = (
 				3469B8EE28D5B0AB00ADB7BF /* MapViewController.swift */,
 				3469B8F028D5B0B300ADB7BF /* MapViewModel.swift */,
 			);
-			path = MapViewScreen;
+			path = MapScreen;
 			sourceTree = "<group>";
 		};
-		3469B8F228D5B1C000ADB7BF /* SearchViewScreen */ = {
+		3469B8F228D5B1C000ADB7BF /* SearchScreen */ = {
 			isa = PBXGroup;
 			children = (
 				3469B8F328D5B1D700ADB7BF /* SearchViewController.swift */,
 				3469B8F528D5B1F000ADB7BF /* SearchViewModel.swift */,
 			);
-			path = SearchViewScreen;
+			path = SearchScreen;
 			sourceTree = "<group>";
 		};
 		3469B8F728D5B7A900ADB7BF /* Views */ = {
