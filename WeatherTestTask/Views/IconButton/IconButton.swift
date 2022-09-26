@@ -14,13 +14,13 @@ class IconButton: UIButton {
         super.init(frame: frame)
     }
 
-    init(icon: UIImage?) {
+    init(icon: UIImage?, size: CGFloat) {
         super.init(frame: .zero)
         let newImage = icon?.withRenderingMode(.alwaysTemplate)
         setImage(newImage, for: .normal)
         tintColor = R.color.white()
         snp.makeConstraints {
-            $0.width.height.equalTo(32)
+            $0.width.height.equalTo(size)
         }
     }
     

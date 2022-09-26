@@ -6,14 +6,19 @@
 //
 
 import Foundation
+import CoreLocation
 
 protocol MapViewModelInterface {
     func goBack()
 }
 
-class MapViewModel: MapViewModelInterface {
+class MapViewModel: NSObject, MapViewModelInterface {
     
     weak var coordinator: MainCoordinatorInteface?
+    
+    override init() {
+        super.init()
+    }
     
     func goBack() {
         coordinator?.goBack()
