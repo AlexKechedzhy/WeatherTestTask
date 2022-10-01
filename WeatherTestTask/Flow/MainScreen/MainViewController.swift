@@ -33,7 +33,7 @@ class MainViewController: UIViewController {
         let label = UILabel()
         label.textColor = R.color.white()
         label.font = UIFont.systemFont(ofSize: 30, weight: .regular)
-//        label.text = "Запорожье"
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
@@ -41,12 +41,10 @@ class MainViewController: UIViewController {
         let label = UILabel()
         label.textColor = R.color.white()
         label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-//        label.text = "ПТ, 20 июля"
         return label
     }()
     
     private lazy var currentWeatherImageView: UIImageView = {
-//        let image = R.image.icon_white_day_cloudy()?.withRenderingMode(.alwaysTemplate)
         let imageView = UIImageView()
         imageView.tintColor = R.color.white()
         imageView.contentMode = .scaleAspectFit
@@ -65,7 +63,6 @@ class MainViewController: UIViewController {
     private let temperatureDetailView = WeatherDetailView(primaryImage: R.image.icon_temp())
     private let humidityDetailView = WeatherDetailView(primaryImage: R.image.icon_humidity())
     private let windDetailView = WeatherDetailView(primaryImage: R.image.icon_wind())
-    
     
     private lazy var hourlyWeatherCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -177,6 +174,7 @@ class MainViewController: UIViewController {
         locationTitleLabel.snp.makeConstraints {
             $0.centerY.equalTo(locationIconImageView)
             $0.leading.equalTo(locationIconImageView.snp.trailing).inset(-8)
+            $0.trailing.equalTo(searchButton.snp.leading).inset(-8)
         }
     }
     
@@ -237,13 +235,26 @@ class MainViewController: UIViewController {
     }
     
     @objc private func searchButtonPressed() {
-        viewModel.showSearchScreen()
+        viewModel.showSearchScreen(delegate: self)
     }
 }
 
 extension MainViewController: MapViewControllerDelegate {
     func userDidChooseCoordinates(latitude: Double, longitude: Double) {
         viewModel.getDataForCoordinates(latitude: latitude, longitude: longitude)
+    }
+}
+
+extension MainViewController: SearchViewControllerDelegate {
+    func userDidSelectLocation(coordinates: [Double]?, locationName: String?) {
+        guard let coordinates = coordinates else {
+            #warning("handle error")
+            return
+        }
+        let longitude = coordinates[0]
+        let latitude = coordinates[1]
+        viewModel.getDataForCoordinates(latitude: latitude, longitude: longitude)
+        viewModel.setSearchedPlaceName(name: locationName)
     }
 }
 

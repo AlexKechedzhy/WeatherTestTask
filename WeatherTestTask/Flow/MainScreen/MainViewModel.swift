@@ -23,8 +23,9 @@ protocol MainViewModelInterface: TableViewAdapter, CollectionViewAdapter {
     var updateWindDetailViewBlock: ((String?, UIImage?) -> Void)? { get set }
     func getDataForCoordinates(latitude: Double, longitude: Double)
     func showMapScreen(delegate: MapViewControllerDelegate)
-    func showSearchScreen()
+    func showSearchScreen(delegate: SearchViewControllerDelegate)
     func requestCurrentLocation()
+    func setSearchedPlaceName(name: String?)
 }
 
 class MainViewModel: NSObject, MainViewModelInterface {
@@ -48,6 +49,8 @@ class MainViewModel: NSObject, MainViewModelInterface {
         }
     }
     
+    private var searchedPlaceName: String?
+    
     override init() {
         super.init()
         locationManager.delegate = self
@@ -63,12 +66,16 @@ class MainViewModel: NSObject, MainViewModelInterface {
         coordinator?.showMapScreen(delegate: delegate)
     }
     
-    func showSearchScreen() {
-        coordinator?.showSearchScreen()
+    func showSearchScreen(delegate: SearchViewControllerDelegate) {
+        coordinator?.showSearchScreen(delegate: delegate)
     }
     
     func requestCurrentLocation() {
         locationManager.requestLocation()
+    }
+    
+    func setSearchedPlaceName(name: String?) {
+        searchedPlaceName = name
     }
     
     private func refreshUI() {
@@ -156,16 +163,20 @@ extension MainViewModel: CLLocationManagerDelegate {
         #warning("rework using instance")
         GeocodingManager().convertCoordinatesToCityName(lat: lat, lon: lon) { [weak self] cityName, error in
             guard let error = error else {
-                self?.updateCityNameBlock?(cityName)
+                self?.updateCityName(newName: cityName)
                 return
             }
             print(error)
         }
     }
     
+    private func updateCityName(newName: String?) {
+        newName != nil ? updateCityNameBlock?(newName) : updateCityNameBlock?(searchedPlaceName)
+    }
+    
     private func getWeatherDataByCoordinates(lat: Double, lon: Double) {
         #warning("rework using instance")
-        WebManager().getWeatherData(latitude: lat, longitude: lon) {
+        NetworkingWeatherManager().getWeatherData(latitude: lat, longitude: lon) {
             weatherData, error in
             guard let error = error else {
                 self.weatherDataModel = weatherData
