@@ -13,7 +13,6 @@ class DailyWeatherTableViewCell: UITableViewCell {
         let label = UILabel()
         label.textColor = R.color.black()
         label.font = UIFont.systemFont(ofSize: 22)
-//        label.text = "MON"
         return label
     }()
     
@@ -21,12 +20,10 @@ class DailyWeatherTableViewCell: UITableViewCell {
         let label = UILabel()
         label.textColor = R.color.black()
         label.font = UIFont.systemFont(ofSize: 22)
-//        label.text = "27° / 19°"
         return label
     }()
     
     private let weatherImageView: UIImageView = {
-//        let image = R.image.icon_white_day_cloudy()?.withRenderingMode(.alwaysTemplate)
         let imageView = UIImageView()
         imageView.tintColor = R.color.black()
         imageView.contentMode = .scaleAspectFit
@@ -77,6 +74,41 @@ class DailyWeatherTableViewCell: UITableViewCell {
         dayLabel.text = dayLabelText
         temperatureLabel.text = temperatureLabelText
         weatherImageView.image = weatherImage
+        handleCellSeletionState()
     }
+    
+    private func handleCellSeletionState() {
+        isSelected ? configureCellAsSelected() :  configureCellAsDeselected()
+    }
+    
+    private func configureCellAsSelected() {
+        dayLabel.textColor = R.color.lightBlue()
+        temperatureLabel.textColor = R.color.lightBlue()
+        weatherImageView.tintColor = R.color.lightBlue()
+        backgroundColor = R.color.white()
+        selectedBackgroundView?.backgroundColor = R.color.white()
+        layer.shadowColor = R.color.darkBlue()?.cgColor
+        layer.shadowRadius = 10
+        layer.shadowOpacity = 0.3
+        layer.shadowOffset = CGSize(width: 0, height: 2)
+        layer.zPosition = 1
+    }
+    
+    private func configureCellAsDeselected() {
+        dayLabel.textColor = R.color.black()
+        temperatureLabel.textColor = R.color.black()
+        weatherImageView.tintColor = R.color.black()
+        backgroundColor = R.color.white()
+        layer.shadowColor = nil
+        layer.shadowRadius = 0
+        layer.shadowOpacity = 0
+        layer.zPosition = 0
+    }
+    
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: false)
+        selected ? configureCellAsSelected() : configureCellAsDeselected()
+    }
+    
     
 }
