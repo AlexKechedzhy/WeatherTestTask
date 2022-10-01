@@ -142,13 +142,14 @@ class SearchViewController: UIViewController {
     
     @objc private func searchButtonPressed() {
         viewModel.userDidPressSearchButton()
+        view.endEditing(true)
     }
     
     @objc private func searchFieldDidChange(_ textField: UITextField) {
         guard let searchText = textField.text else {
             return
         }
-        viewModel.getCitySearchData(searchText: searchText)
+        viewModel.searchFieldTextDidChange(searchText: searchText)
     }
     
 }

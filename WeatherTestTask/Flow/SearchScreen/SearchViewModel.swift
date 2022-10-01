@@ -11,7 +11,7 @@ protocol SearchViewModelInterface: TableViewAdapter {
     var reloadSearchTableViewBlock: (() -> Void)? { get set }
     var userDidSelectLocationBlock: (([Double]?, String?) -> Void)? { get set }
     func goBack()
-    func getCitySearchData(searchText: String)
+    func searchFieldTextDidChange(searchText: String)
     func userDidPressSearchButton()
     
 }
@@ -36,7 +36,22 @@ class SearchViewModel: NSObject, SearchViewModelInterface {
         coordinator?.goBack()
     }
     
-    func getCitySearchData(searchText: String) {
+    func searchFieldTextDidChange(searchText: String) {
+        getCitySearchData(searchText: searchText)
+    }
+    
+    func userDidPressSearchButton() {
+        let searchResultsCount = citySearchData?.features.count ?? 0
+        guard searchResultsCount > 0 else {
+            return
+        }
+        let coordinates = citySearchData?.features[0].geometry.coordinates
+        let locationName = citySearchData?.features[0].properties.label
+        userDidSelectLocationBlock?(coordinates, locationName)
+        goBack()
+    }
+    
+    private func getCitySearchData(searchText: String) {
         citySearchManager.getCitySearchData(searchText: searchText) { [weak self] citySearchData, error in
             guard let error = error else {
                 self?.citySearchData = citySearchData
@@ -46,11 +61,6 @@ class SearchViewModel: NSObject, SearchViewModelInterface {
             print(error)
         }
     }
-    
-    func userDidPressSearchButton() {
-        
-    }
-    
 }
 
 extension SearchViewModel {

@@ -111,8 +111,8 @@ class MainViewController: UIViewController {
         viewModel.reloadDailyTableViewBlock = { [weak self] in
             self?.dailyWeatherTableView.reloadData()
         }
-        viewModel.updateCityNameBlock = { [weak self] cityLabel in
-            self?.locationTitleLabel.text = cityLabel
+        viewModel.updateCityNameBlock = { [weak self] locationName in
+            self?.setLocationTitleLabelText(text: locationName)
         }
         viewModel.updateDateLabelBlock = { [weak self] date in
             self?.dateLabel.text = date
@@ -241,7 +241,8 @@ class MainViewController: UIViewController {
 
 extension MainViewController: MapViewControllerDelegate {
     func userDidChooseCoordinates(latitude: Double, longitude: Double) {
-        viewModel.getDataForCoordinates(latitude: latitude, longitude: longitude)
+        viewModel.getWeatherDataForCoordinates(latitude: latitude, longitude: longitude)
+        viewModel.getCityNameByCoordinates(latitude: latitude, longitude: longitude)
     }
 }
 
@@ -253,8 +254,12 @@ extension MainViewController: SearchViewControllerDelegate {
         }
         let longitude = coordinates[0]
         let latitude = coordinates[1]
-        viewModel.getDataForCoordinates(latitude: latitude, longitude: longitude)
-        viewModel.setSearchedPlaceName(name: locationName)
+        viewModel.getWeatherDataForCoordinates(latitude: latitude, longitude: longitude)
+        locationName != nil ? setLocationTitleLabelText(text: locationName) : viewModel.getCityNameByCoordinates(latitude: latitude, longitude: longitude)
+    }
+    
+    private func setLocationTitleLabelText(text: String?) {
+        locationTitleLabel.text = text
     }
 }
 
