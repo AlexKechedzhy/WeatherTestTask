@@ -22,7 +22,7 @@ struct CitySearchModel: Decodable {
     }
 
     struct Geometry: Decodable {
-        let coordinates: [Double]
+        let coordinates: [Double]?
     }
 
 
