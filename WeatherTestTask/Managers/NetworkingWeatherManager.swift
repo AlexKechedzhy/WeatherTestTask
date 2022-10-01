@@ -1,5 +1,5 @@
 //
-//  WebManager.swift
+//  NetworkingWeatherManager.swift
 //  WeatherTestTask
 //
 //  Created by Alex173 on 17.09.2022.
@@ -8,7 +8,7 @@
 import Foundation
 import Alamofire
 
-class WebManager {
+class NetworkingWeatherManager {
     
     private let appID = "144ae1233d3463be4dc6dd11edb813c8"
     private let weatherbaseURL = "https://api.openweathermap.org/data/2.5/onecall?exclude=alerts,minutely&units=metric"
