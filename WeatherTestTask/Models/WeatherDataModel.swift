@@ -7,12 +7,12 @@
 
 import Foundation
 
-struct WeatherDataModel: Codable {
+struct WeatherDataModel: Decodable {
     let current: Current
     let hourly: [Hourly]
     var daily: [Daily]
     
-    struct Current: Codable {
+    struct Current: Decodable {
         let dt: Int
         let temp: Double
         let wind_speed: Double
@@ -20,14 +20,14 @@ struct WeatherDataModel: Codable {
         let weather: [Weather]
     }
 
-    struct Hourly: Codable {
+    struct Hourly: Decodable {
         let dt: Int
         let temp: Double
         let humidity: Int
         let weather: [Weather]
     }
 
-    struct Daily: Codable {
+    struct Daily: Decodable {
         let dt: Int
         let temp: Temp
         let humidity: Int
@@ -35,12 +35,12 @@ struct WeatherDataModel: Codable {
         var isSelected: Bool? = false
     }
 
-    struct Temp: Codable {
+    struct Temp: Decodable {
         let min: Double
         let max: Double
     }
 
-    struct Weather: Codable {
+    struct Weather: Decodable {
         let id: Int
         let main: String
         let description: String

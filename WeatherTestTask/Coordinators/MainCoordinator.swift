@@ -15,7 +15,7 @@ protocol Coordinator: AnyObject {
 protocol MainCoordinatorInteface: Coordinator {
     func goBack()
     func showMapScreen(delegate: MapViewControllerDelegate)
-    func showSearchScreen()
+    func showSearchScreen(delegate: SearchViewControllerDelegate)
 }
 
 class MainCoordinator: MainCoordinatorInteface {
@@ -45,9 +45,9 @@ class MainCoordinator: MainCoordinatorInteface {
         navigationController.pushViewController(viewController, animated: true)
     }
     
-    func showSearchScreen() {
+    func showSearchScreen(delegate: SearchViewControllerDelegate) {
         let viewModel = SearchViewModel()
-        let viewController = SearchViewController(viewModel: viewModel)
+        let viewController = SearchViewController(viewModel: viewModel, delegate: delegate)
         viewModel.coordinator = self
         navigationController.pushViewController(viewController, animated: true)
     }

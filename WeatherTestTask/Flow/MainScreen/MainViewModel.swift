@@ -21,9 +21,10 @@ protocol MainViewModelInterface: TableViewAdapter, CollectionViewAdapter {
     var updateTemperatureDetailViewBlock: ((String?) -> Void)? { get set }
     var updateHumidityDetailViewBlock: ((String?) -> Void)? { get set }
     var updateWindDetailViewBlock: ((String?, UIImage?) -> Void)? { get set }
-    func getDataForCoordinates(latitude: Double, longitude: Double)
+    func getWeatherDataForCoordinates(latitude: Double, longitude: Double)
+    func getCityNameByCoordinates(latitude: Double, longitude: Double)
     func showMapScreen(delegate: MapViewControllerDelegate)
-    func showSearchScreen()
+    func showSearchScreen(delegate: SearchViewControllerDelegate)
     func requestCurrentLocation()
 }
 
@@ -54,17 +55,12 @@ class MainViewModel: NSObject, MainViewModelInterface {
         locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
     }
     
-    func getDataForCoordinates(latitude: Double, longitude: Double) {
-        getCityNameByCoordinates(lat: latitude, lon: longitude)
-        getWeatherDataByCoordinates(lat: latitude, lon: longitude)
-    }
-    
     func showMapScreen(delegate: MapViewControllerDelegate) {
         coordinator?.showMapScreen(delegate: delegate)
     }
     
-    func showSearchScreen() {
-        coordinator?.showSearchScreen()
+    func showSearchScreen(delegate: SearchViewControllerDelegate) {
+        coordinator?.showSearchScreen(delegate: delegate)
     }
     
     func requestCurrentLocation() {
@@ -124,6 +120,29 @@ class MainViewModel: NSObject, MainViewModelInterface {
         String(Int(temperature)) + "°"
     }
     
+    func getWeatherDataForCoordinates(latitude: Double, longitude: Double) {
+        #warning("rework using instance")
+        NetworkingWeatherManager().getWeatherData(latitude: latitude, longitude: longitude) {
+            weatherData, error in
+            guard let error = error else {
+                self.weatherDataModel = weatherData
+                return
+            }
+            print(error)
+        }
+    }
+    
+    func getCityNameByCoordinates(latitude: Double, longitude: Double) {
+        #warning("rework using instance")
+        GeocodingManager().convertCoordinatesToCityName(lat: latitude, lon: longitude) { [weak self] cityName, error in
+            guard let error = error else {
+                self?.updateCityNameBlock?(cityName)
+                return
+            }
+            print(error)
+        }
+    }
+    
 }
 
 extension MainViewModel: CLLocationManagerDelegate {
@@ -135,7 +154,8 @@ extension MainViewModel: CLLocationManagerDelegate {
         locationManager.stopUpdatingLocation()
         let currentLatitude = location.coordinate.latitude as Double
         let currentLongitude = location.coordinate.longitude as Double
-        getDataForCoordinates(latitude: currentLatitude, longitude: currentLongitude)
+        getWeatherDataForCoordinates(latitude: currentLatitude, longitude: currentLongitude)
+        getCityNameByCoordinates(latitude: currentLatitude, longitude: currentLongitude)
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -152,28 +172,7 @@ extension MainViewModel: CLLocationManagerDelegate {
         }
     }
     
-    private func getCityNameByCoordinates(lat: Double, lon: Double) {
-        #warning("rework using instance")
-        GeocodingManager().convertCoordinatesToCityName(lat: lat, lon: lon) { [weak self] cityName, error in
-            guard let error = error else {
-                self?.updateCityNameBlock?(cityName)
-                return
-            }
-            print(error)
-        }
-    }
-    
-    private func getWeatherDataByCoordinates(lat: Double, lon: Double) {
-        #warning("rework using instance")
-        WebManager().getWeatherData(latitude: lat, longitude: lon) {
-            weatherData, error in
-            guard let error = error else {
-                self.weatherDataModel = weatherData
-                return
-            }
-            print(error)
-        }
-    }
+ 
 }
 
 //MARK: - UICollectionView Delegate & DataSource methods
