@@ -17,7 +17,7 @@ protocol MainViewModelInterface: TableViewAdapter, CollectionViewAdapter {
     var reloadDailyTableViewBlock: (() -> Void)? { get set }
     var updateCityNameBlock: ((String?) -> Void)? { get set }
     var updateDateLabelBlock: ((String?) -> Void)? { get set }
-    var updateCurrentWeatherImageBlock: ((UIImage?) -> Void)? { get set }
+    var updateMainWeatherImageBlock: ((UIImage?) -> Void)? { get set }
     var updateTemperatureDetailViewBlock: ((String?) -> Void)? { get set }
     var updateHumidityDetailViewBlock: ((String?) -> Void)? { get set }
     var updateWindDetailViewBlock: ((String?, UIImage?) -> Void)? { get set }
@@ -34,7 +34,7 @@ class MainViewModel: NSObject, MainViewModelInterface {
     var reloadDailyTableViewBlock: (() -> Void)?
     var updateCityNameBlock: ((String?) -> Void)?
     var updateDateLabelBlock: ((String?) -> Void)?
-    var updateCurrentWeatherImageBlock: ((UIImage?) -> Void)?
+    var updateMainWeatherImageBlock: ((UIImage?) -> Void)?
     var updateTemperatureDetailViewBlock: ((String?) -> Void)?
     var updateHumidityDetailViewBlock: ((String?) -> Void)?
     var updateWindDetailViewBlock: ((String?, UIImage?) -> Void)?
@@ -68,13 +68,13 @@ class MainViewModel: NSObject, MainViewModelInterface {
     }
     
     private func refreshUI() {
-        updateSelectedWeatherView(data: weatherDataModel?.daily.first)
+        updateMainWeatherView(data: weatherDataModel?.daily.first)
         reloadHourlyCollectionViewBlock?()
         reloadDailyTableViewBlock?()
     }
     
     #warning("consider renaming this View")
-    private func updateSelectedWeatherView(data: WeatherDataModel.Daily?) {
+    private func updateMainWeatherView(data: WeatherDataModel.Daily?) {
         guard let dailyData = data else {
             return
         }
@@ -93,7 +93,7 @@ class MainViewModel: NSObject, MainViewModelInterface {
     private func updateCurrentWeatherImageView(data: WeatherDataModel.Daily?) {
         let conditionId = data?.weather.first?.id ?? 0
         let weatherImage = WeatherImageManager.instance.getWeatherImage(conditionId: conditionId)?.withRenderingMode(.alwaysTemplate)
-        updateCurrentWeatherImageBlock?(weatherImage)
+        updateMainWeatherImageBlock?(weatherImage)
     }
     
     private func updateTemperatureDetailView(data: WeatherDataModel.Daily?) {
@@ -251,7 +251,7 @@ extension MainViewModel {
             #warning("error handling?")
             return
         }
-        updateSelectedWeatherView(data: cellModel)
+        updateMainWeatherView(data: cellModel)
     }
     
 }
