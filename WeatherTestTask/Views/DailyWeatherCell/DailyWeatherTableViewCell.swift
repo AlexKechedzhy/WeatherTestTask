@@ -105,10 +105,23 @@ class DailyWeatherTableViewCell: UITableViewCell {
         layer.zPosition = 0
     }
     
+    private func configureCellAsHighlighted() {
+        selectedBackgroundView?.backgroundColor = R.color.white()
+    }
+    
+    private func configureCellAsDehighlighted() {
+        selectedBackgroundView?.backgroundColor = R.color.white()
+    }
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: false)
+        super.setSelected(selected, animated: animated)
         selected ? configureCellAsSelected() : configureCellAsDeselected()
     }
     
+    
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        super.setHighlighted(highlighted, animated: animated)
+        highlighted ? configureCellAsHighlighted() : configureCellAsDehighlighted()
+    }
     
 }

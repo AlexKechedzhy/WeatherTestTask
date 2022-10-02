@@ -83,6 +83,7 @@ class MainViewController: UIViewController {
         tableView.dataSource = viewModel
         tableView.register(DailyWeatherTableViewCell.self)
         tableView.backgroundColor = R.color.white()
+        tableView.separatorStyle = .none
         return tableView
     }()
 

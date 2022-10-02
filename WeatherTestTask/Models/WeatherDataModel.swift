@@ -31,8 +31,9 @@ struct WeatherDataModel: Decodable {
         let dt: Int
         let temp: Temp
         let humidity: Int
+        let wind_speed:  Double
+        let wind_deg: Int
         let weather: [Weather]
-        var isSelected: Bool? = false
     }
 
     struct Temp: Decodable {
