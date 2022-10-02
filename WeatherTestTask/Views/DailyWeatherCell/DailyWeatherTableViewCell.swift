@@ -41,6 +41,8 @@ class DailyWeatherTableViewCell: UITableViewCell {
     
     private func configureCell() {
         backgroundColor = .clear
+        selectedBackgroundView = UIView()
+        selectedBackgroundView?.backgroundColor = .clear
         configureDayLabel()
         configureTemperatureLabel()
         configureWeatherImageView()
@@ -78,7 +80,7 @@ class DailyWeatherTableViewCell: UITableViewCell {
     }
     
     private func handleCellSeletionState() {
-        isSelected ? configureCellAsSelected() :  configureCellAsDeselected()
+        isSelected ? configureCellAsSelected() : configureCellAsDeselected()
     }
     
     private func configureCellAsSelected() {
@@ -86,7 +88,6 @@ class DailyWeatherTableViewCell: UITableViewCell {
         temperatureLabel.textColor = R.color.lightBlue()
         weatherImageView.tintColor = R.color.lightBlue()
         backgroundColor = R.color.white()
-        selectedBackgroundView?.backgroundColor = R.color.white()
         layer.shadowColor = R.color.darkBlue()?.cgColor
         layer.shadowRadius = 10
         layer.shadowOpacity = 0.3
@@ -105,23 +106,9 @@ class DailyWeatherTableViewCell: UITableViewCell {
         layer.zPosition = 0
     }
     
-    private func configureCellAsHighlighted() {
-        selectedBackgroundView?.backgroundColor = R.color.white()
-    }
-    
-    private func configureCellAsDehighlighted() {
-        selectedBackgroundView?.backgroundColor = R.color.white()
-    }
-    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         selected ? configureCellAsSelected() : configureCellAsDeselected()
-    }
-    
-    
-    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
-        super.setHighlighted(highlighted, animated: animated)
-        highlighted ? configureCellAsHighlighted() : configureCellAsDehighlighted()
     }
     
 }
