@@ -17,7 +17,7 @@ protocol MainViewModelInterface: TableViewAdapter, CollectionViewAdapter {
     var reloadDailyTableViewBlock: (() -> Void)? { get set }
     var updateCityNameBlock: ((String?) -> Void)? { get set }
     var updateDateLabelBlock: ((String?) -> Void)? { get set }
-    var updateCurrentWeatherImageBlock: ((UIImage?) -> Void)? { get set }
+    var updateMainWeatherImageBlock: ((UIImage?) -> Void)? { get set }
     var updateTemperatureDetailViewBlock: ((String?) -> Void)? { get set }
     var updateHumidityDetailViewBlock: ((String?) -> Void)? { get set }
     var updateWindDetailViewBlock: ((String?, UIImage?) -> Void)? { get set }
@@ -34,7 +34,7 @@ class MainViewModel: NSObject, MainViewModelInterface {
     var reloadDailyTableViewBlock: (() -> Void)?
     var updateCityNameBlock: ((String?) -> Void)?
     var updateDateLabelBlock: ((String?) -> Void)?
-    var updateCurrentWeatherImageBlock: ((UIImage?) -> Void)?
+    var updateMainWeatherImageBlock: ((UIImage?) -> Void)?
     var updateTemperatureDetailViewBlock: ((String?) -> Void)?
     var updateHumidityDetailViewBlock: ((String?) -> Void)?
     var updateWindDetailViewBlock: ((String?, UIImage?) -> Void)?
@@ -68,37 +68,49 @@ class MainViewModel: NSObject, MainViewModelInterface {
     }
     
     private func refreshUI() {
-        let currentDate = convertToDateString(dateInt: weatherDataModel?.current.dt, dateFormat: "E, dd MMMM")
-        updateDateLabelBlock?(currentDate)
-        updateCurrentWeatherImageView()
-        updateTemperatureDetailView()
-        updateHumidityDetailView()
-        updateWindDetailView()
+        updateMainWeatherView(data: weatherDataModel?.daily.first)
         reloadHourlyCollectionViewBlock?()
         reloadDailyTableViewBlock?()
     }
     
-    private func updateCurrentWeatherImageView() {
-        let conditionID = weatherDataModel?.current.weather.first?.id ?? 0
-        let weatherImage = WeatherImageManager.instance.getWeatherImage(conditionId: conditionID)?.withRenderingMode(.alwaysTemplate)
-        updateCurrentWeatherImageBlock?(weatherImage)
+    #warning("consider renaming this View")
+    private func updateMainWeatherView(data: WeatherDataModel.Daily?) {
+        guard let dailyData = data else {
+            return
+        }
+        updateDateLabel(data: dailyData)
+        updateCurrentWeatherImageView(data: dailyData)
+        updateTemperatureDetailView(data: dailyData)
+        updateHumidityDetailView(data: dailyData)
+        updateWindDetailView(data: dailyData)
     }
     
-    private func updateTemperatureDetailView() {
-        let maxTemperature = convertDoubleToTemperatureString(temperature: weatherDataModel?.daily.first?.temp.max ?? 0)
-        let minTemperature = convertDoubleToTemperatureString(temperature: weatherDataModel?.daily.first?.temp.min ?? 0)
+    private func updateDateLabel(data: WeatherDataModel.Daily?) {
+        let currentDate = convertToDateString(dateInt: data?.dt, dateFormat: "E, dd MMMM")
+        updateDateLabelBlock?(currentDate)
+    }
+    
+    private func updateCurrentWeatherImageView(data: WeatherDataModel.Daily?) {
+        let conditionId = data?.weather.first?.id ?? 0
+        let weatherImage = WeatherImageManager.instance.getWeatherImage(conditionId: conditionId)?.withRenderingMode(.alwaysTemplate)
+        updateMainWeatherImageBlock?(weatherImage)
+    }
+    
+    private func updateTemperatureDetailView(data: WeatherDataModel.Daily?) {
+        let maxTemperature = convertDoubleToTemperatureString(temperature: data?.temp.max ?? 0)
+        let minTemperature = convertDoubleToTemperatureString(temperature: data?.temp.min ?? 0)
         updateTemperatureDetailViewBlock?(maxTemperature + " / " + minTemperature)
     }
     
-    private func updateHumidityDetailView() {
-        let humidity = weatherDataModel?.daily.first?.humidity ?? 0
+    private func updateHumidityDetailView(data: WeatherDataModel.Daily?) {
+        let humidity = data?.humidity ?? 0
         let humidityString = String(humidity) + "%"
         updateHumidityDetailViewBlock?(humidityString)
     }
     
-    private func updateWindDetailView() {
-        let windSpeed = weatherDataModel?.current.wind_speed ?? 0
-        let windDirection = weatherDataModel?.current.wind_deg ?? 0
+    private func updateWindDetailView(data: WeatherDataModel.Daily?) {
+        let windSpeed = data?.wind_speed ?? 0
+        let windDirection = data?.wind_deg ?? 0
         let windSpeedString = String(Int(windSpeed)) + "m/s"
         let windDirectionImage = WeatherImageManager.instance.getWindDirectionImage(windDirection: windDirection)?.withRenderingMode(.alwaysTemplate)
         updateWindDetailViewBlock?(windSpeedString, windDirectionImage)
@@ -232,6 +244,14 @@ extension MainViewModel {
                  temperatureLabelText: temperatureText,
                  weatherImage: weatherImage)
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let cellModel = weatherDataModel?.daily[indexPath.row] else {
+            #warning("error handling?")
+            return
+        }
+        updateMainWeatherView(data: cellModel)
     }
     
 }

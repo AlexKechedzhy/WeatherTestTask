@@ -44,7 +44,7 @@ class MainViewController: UIViewController {
         return label
     }()
     
-    private lazy var currentWeatherImageView: UIImageView = {
+    private lazy var mainWeatherImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.tintColor = R.color.white()
         imageView.contentMode = .scaleAspectFit
@@ -83,6 +83,7 @@ class MainViewController: UIViewController {
         tableView.dataSource = viewModel
         tableView.register(DailyWeatherTableViewCell.self)
         tableView.backgroundColor = R.color.white()
+        tableView.separatorStyle = .none
         return tableView
     }()
 
@@ -117,8 +118,8 @@ class MainViewController: UIViewController {
         viewModel.updateDateLabelBlock = { [weak self] date in
             self?.dateLabel.text = date
         }
-        viewModel.updateCurrentWeatherImageBlock = { [weak self] weatherImage in
-            self?.currentWeatherImageView.image = weatherImage
+        viewModel.updateMainWeatherImageBlock = { [weak self] weatherImage in
+            self?.mainWeatherImageView.image = weatherImage
         }
         viewModel.updateTemperatureDetailViewBlock = { [weak self] labelText in
             self?.temperatureDetailView.setInfo(labelText: labelText)
@@ -138,7 +139,7 @@ class MainViewController: UIViewController {
         configureLocationIconImageView()
         configureLocationTitleLabel()
         configureDateLabel()
-        configureCurrentWeatherImageView()
+        configureMainWeatherImageView()
         configureHourlyWeatherCollectionView()
         configureDetailStackView()
         configureDailyWeatherTableView()
@@ -186,9 +187,9 @@ class MainViewController: UIViewController {
         }
     }
     
-    private func configureCurrentWeatherImageView() {
-        view.addSubview(currentWeatherImageView)
-        currentWeatherImageView.snp.makeConstraints {
+    private func configureMainWeatherImageView() {
+        view.addSubview(mainWeatherImageView)
+        mainWeatherImageView.snp.makeConstraints {
             $0.top.equalTo(dateLabel.snp.bottom).inset(-8)
             $0.width.height.equalTo(164)
             $0.leading.equalToSuperview().inset(32)
@@ -201,9 +202,9 @@ class MainViewController: UIViewController {
         detailStackView.addArrangedSubview(humidityDetailView)
         detailStackView.addArrangedSubview(windDetailView)
         detailStackView.snp.makeConstraints {
-            $0.leading.equalTo(currentWeatherImageView.snp.trailing).inset(-32)
+            $0.leading.equalTo(mainWeatherImageView.snp.trailing).inset(-32)
             $0.trailing.equalToSuperview().inset(32)
-            $0.centerY.equalTo(currentWeatherImageView)
+            $0.centerY.equalTo(mainWeatherImageView)
             $0.height.equalTo(100)
         }
     }
@@ -212,7 +213,7 @@ class MainViewController: UIViewController {
     private func configureHourlyWeatherCollectionView() {
         view.addSubview(hourlyWeatherCollectionView)
         hourlyWeatherCollectionView.snp.makeConstraints {
-            $0.top.equalTo(currentWeatherImageView.snp.bottom).inset(-40)
+            $0.top.equalTo(mainWeatherImageView.snp.bottom).inset(-40)
             $0.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
             $0.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
             $0.height.equalTo(156)
