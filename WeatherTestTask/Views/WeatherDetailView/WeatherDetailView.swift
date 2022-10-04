@@ -18,8 +18,8 @@ class WeatherDetailView: UIView {
     
     private let textLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 20, weight: .regular)
-        label.tintColor = R.color.white()
+        label.font = UIFont.systemFont(ofSize: 22, weight: .regular)
+        label.textColor = R.color.white()
         return label
     }()
     
@@ -41,6 +41,7 @@ class WeatherDetailView: UIView {
     }
     
     private func configureView() {
+        tintColor = R.color.white()
         configurePrimaryImageView()
         configureTextLabel()
         configureSecondaryImageView()
@@ -67,7 +68,6 @@ class WeatherDetailView: UIView {
         secondaryImageView.snp.makeConstraints {
             $0.leading.equalTo(textLabel.snp.trailing).inset(-8)
             $0.centerY.equalToSuperview()
-            $0.trailing.equalToSuperview().inset(8)
         }
     }
     

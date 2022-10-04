@@ -9,60 +9,30 @@ import UIKit
 
 class MainViewController: UIViewController {
     
-    private lazy var mapButton: IconButton = {
-        let button = IconButton(icon: R.image.icon_my_location(), size: 32)
-        button.addTarget(self, action: #selector(mapButtonPressed), for: .touchUpInside)
-        return button
+    private let viewForMainInfo: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        return view
     }()
     
-    private lazy var searchButton: IconButton = {
-        let button = IconButton(icon: R.image.icon_search(), size: 32)
-        button.addTarget(self, action: #selector(searchButtonPressed), for: .touchUpInside)
-        return button
+    private let viewForDailyInfo: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        return view
     }()
     
-    private lazy var locationIconImageView: UIImageView = {
-        let image = R.image.icon_place()?.withRenderingMode(.alwaysTemplate)
-        let imageView = UIImageView(image: image)
-        imageView.tintColor = R.color.white()
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }()
-    
-    private lazy var locationTitleLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = R.color.white()
-        label.font = UIFont.systemFont(ofSize: 30, weight: .regular)
-        label.adjustsFontSizeToFitWidth = true
-        return label
-    }()
-    
-    private lazy var dateLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = R.color.white()
-        label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-        return label
-    }()
-    
-    private lazy var mainWeatherImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.tintColor = R.color.white()
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }()
-    
-    private let detailStackView: UIStackView = {
+    private let orientationStackView: UIStackView = {
         let stackView = UIStackView()
-        stackView.distribution = .fillEqually
-        stackView.contentMode = .scaleToFill
+        let isLandscape = UIDevice.current.orientation.isLandscape
+        stackView.axis = isLandscape ? .horizontal : .vertical
         stackView.alignment = .fill
-        stackView.axis = .vertical
+        stackView.distribution =  isLandscape ? .fillEqually : .fill
         return stackView
     }()
     
-    private let temperatureDetailView = WeatherDetailView(primaryImage: R.image.icon_temp())
-    private let humidityDetailView = WeatherDetailView(primaryImage: R.image.icon_humidity())
-    private let windDetailView = WeatherDetailView(primaryImage: R.image.icon_wind())
+    private lazy var weatherTopView = WeatherTopView(delegate: self)
+    
+    private lazy var weatherMainInfoView = WeatherMainInfoView()
     
     private lazy var hourlyWeatherCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -105,6 +75,12 @@ class MainViewController: UIViewController {
         viewModel.requestCurrentLocation()
     }
     
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        let isLandscape = UIDevice.current.orientation.isLandscape
+        orientationStackView.axis = isLandscape ? .horizontal : .vertical
+        orientationStackView.distribution =  isLandscape ? .fillEqually : .fill
+    }
+    
     private func configureViewModel() {
         viewModel.reloadHourlyCollectionViewBlock = { [weak self] in
             self?.hourlyWeatherCollectionView.reloadData()
@@ -113,129 +89,89 @@ class MainViewController: UIViewController {
             self?.dailyWeatherTableView.reloadData()
         }
         viewModel.updateCityNameBlock = { [weak self] locationName in
-            self?.setLocationTitleLabelText(text: locationName)
+            self?.weatherTopView.setTitleLabelText(locationName)
         }
         viewModel.updateDateLabelBlock = { [weak self] date in
-            self?.dateLabel.text = date
+            self?.weatherTopView.setDateLabelText(date)
         }
         viewModel.updateMainWeatherImageBlock = { [weak self] weatherImage in
-            self?.mainWeatherImageView.image = weatherImage
+            self?.weatherMainInfoView.setMainImage(weatherImage)
         }
         viewModel.updateTemperatureDetailViewBlock = { [weak self] labelText in
-            self?.temperatureDetailView.setInfo(labelText: labelText)
+            self?.weatherMainInfoView.setTemperatureInfo(text: labelText)
         }
         viewModel.updateHumidityDetailViewBlock = { [weak self] labelText in
-            self?.humidityDetailView.setInfo(labelText: labelText)
+            self?.weatherMainInfoView.setHumidityInfo(text: labelText)
         }
         viewModel.updateWindDetailViewBlock = { [weak self] labelText, directionImage in
-            self?.windDetailView.setInfo(labelText: labelText, secondaryImage: directionImage)
+            self?.weatherMainInfoView.setWindInfo(text: labelText, secondaryImage: directionImage)
         }
     }
     
     private func configureView() {
         view.backgroundColor = R.color.darkBlue()
-        configureMapButton()
-        configureSearchButton()
-        configureLocationIconImageView()
-        configureLocationTitleLabel()
-        configureDateLabel()
-        configureMainWeatherImageView()
+        configureOrientationStackView()
+
+        configureWeatherTopView()
+        configureWeatherMainInfoView()
         configureHourlyWeatherCollectionView()
-        configureDetailStackView()
         configureDailyWeatherTableView()
     }
 
-    private func configureMapButton() {
-        view.addSubview(mapButton)
-        mapButton.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(16)
-            $0.trailing.equalToSuperview().inset(16)
-        }
-    }
-    
-    private func configureSearchButton() {
-        view.addSubview(searchButton)
-        searchButton.snp.makeConstraints {
-            $0.top.equalTo(mapButton.snp.top)
-            $0.trailing.equalTo(mapButton.snp.leading).inset(-16)
-        }
-    }
-    
-    private func configureLocationIconImageView() {
-        view.addSubview(locationIconImageView)
-        locationIconImageView.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(20)
-            $0.leading.equalTo(view.safeAreaLayoutGuide.snp.leading).inset(16)
-            $0.width.height.equalTo(24)
-        }
-    }
-    
-    private func configureLocationTitleLabel() {
-        view.addSubview(locationTitleLabel)
-        locationTitleLabel.snp.makeConstraints {
-            $0.centerY.equalTo(locationIconImageView)
-            $0.leading.equalTo(locationIconImageView.snp.trailing).inset(-8)
-            $0.trailing.equalTo(searchButton.snp.leading).inset(-8)
-        }
-    }
-    
-    private func configureDateLabel() {
-        view.addSubview(dateLabel)
-        dateLabel.snp.makeConstraints {
-            $0.top.equalTo(locationIconImageView.snp.bottom).inset(-16)
-            $0.leading.equalTo(locationIconImageView)
-        }
-    }
-    
-    private func configureMainWeatherImageView() {
-        view.addSubview(mainWeatherImageView)
-        mainWeatherImageView.snp.makeConstraints {
-            $0.top.equalTo(dateLabel.snp.bottom).inset(-8)
-            $0.width.height.equalTo(164)
-            $0.leading.equalToSuperview().inset(32)
-        }
-    }
-    
-    private func configureDetailStackView() {
-        view.addSubview(detailStackView)
-        detailStackView.addArrangedSubview(temperatureDetailView)
-        detailStackView.addArrangedSubview(humidityDetailView)
-        detailStackView.addArrangedSubview(windDetailView)
-        detailStackView.snp.makeConstraints {
-            $0.leading.equalTo(mainWeatherImageView.snp.trailing).inset(-32)
-            $0.trailing.equalToSuperview().inset(32)
-            $0.centerY.equalTo(mainWeatherImageView)
+    private func configureWeatherTopView() {
+        viewForMainInfo.addSubview(weatherTopView)
+        weatherTopView.snp.makeConstraints {
+            $0.top.equalToSuperview()
+            $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(100)
         }
     }
-
+    
+    private func configureWeatherMainInfoView() {
+        viewForMainInfo.addSubview(weatherMainInfoView)
+        weatherMainInfoView.snp.makeConstraints {
+            $0.top.equalTo(weatherTopView.snp.bottom)
+            $0.leading.trailing.equalToSuperview()
+        }
+    }
     
     private func configureHourlyWeatherCollectionView() {
-        view.addSubview(hourlyWeatherCollectionView)
+        viewForMainInfo.addSubview(hourlyWeatherCollectionView)
         hourlyWeatherCollectionView.snp.makeConstraints {
-            $0.top.equalTo(mainWeatherImageView.snp.bottom).inset(-40)
-            $0.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
-            $0.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
+            $0.top.equalTo(weatherMainInfoView.snp.bottom)
+            $0.trailing.leading.equalToSuperview()
             $0.height.equalTo(156)
+            $0.bottom.equalToSuperview()
         }
     }
     
     private func configureDailyWeatherTableView() {
-        view.addSubview(dailyWeatherTableView)
+        viewForDailyInfo.addSubview(dailyWeatherTableView)
         dailyWeatherTableView.snp.makeConstraints {
-            $0.top.equalTo(hourlyWeatherCollectionView.snp.bottom)
-            $0.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
+            $0.edges.equalToSuperview()
+        }
+    }
+    
+    private func configureOrientationStackView() {
+        orientationStackView.addArrangedSubview(viewForMainInfo)
+        orientationStackView.addArrangedSubview(viewForDailyInfo)
+        view.addSubview(orientationStackView)
+        orientationStackView.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             $0.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
-            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            $0.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
+            $0.bottom.equalToSuperview()
         }
     }
 
+}
 
-    @objc private func mapButtonPressed() {
+extension MainViewController: WeatherTopViewDelegate {
+    func mapButtonPressed() {
         viewModel.showMapScreen(delegate: self)
     }
     
-    @objc private func searchButtonPressed() {
+    func searchButtonPressed() {
         viewModel.showSearchScreen(delegate: self)
     }
 }
@@ -256,11 +192,7 @@ extension MainViewController: SearchViewControllerDelegate {
         let longitude = coordinates[0]
         let latitude = coordinates[1]
         viewModel.getWeatherDataForCoordinates(latitude: latitude, longitude: longitude)
-        locationName != nil ? setLocationTitleLabelText(text: locationName) : viewModel.getCityNameByCoordinates(latitude: latitude, longitude: longitude)
-    }
-    
-    private func setLocationTitleLabelText(text: String?) {
-        locationTitleLabel.text = text
+        locationName != nil ? weatherTopView.setTitleLabelText(locationName) : viewModel.getCityNameByCoordinates(latitude: latitude, longitude: longitude)
     }
 }
 
