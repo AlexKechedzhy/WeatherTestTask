@@ -39,6 +39,7 @@ class WeatherMainInfoView: UIView {
     }
     
     private func configureView() {
+        backgroundColor = R.color.darkBlue()
         configureMainWeatherImageView()
         configureDetailStackView()
     }
