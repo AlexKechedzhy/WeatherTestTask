@@ -15,31 +15,48 @@ typealias CollectionViewAdapter = UICollectionViewDelegate & UICollectionViewDat
 protocol MainViewModelInterface: TableViewAdapter, CollectionViewAdapter {
     var reloadHourlyCollectionViewBlock: (() -> Void)? { get set }
     var reloadDailyTableViewBlock: (() -> Void)? { get set }
+    var hideMainUIBlock: (() -> Void)? { get set }
+    var showMainUIBlock: (() -> Void)? { get set }
     var updateCityNameBlock: ((String?) -> Void)? { get set }
     var updateDateLabelBlock: ((String?) -> Void)? { get set }
     var updateMainWeatherImageBlock: ((UIImage?) -> Void)? { get set }
     var updateTemperatureDetailViewBlock: ((String?) -> Void)? { get set }
     var updateHumidityDetailViewBlock: ((String?) -> Void)? { get set }
     var updateWindDetailViewBlock: ((String?, UIImage?) -> Void)? { get set }
+    var dailyDataAlertBlock: (() -> Void)? { get set }
+    var locationAccessAlertBlock: (() -> Void)? { get set }
+    var locationErrorAlertBlock: (() -> Void)? { get set }
+    var failedToGetWeatherBlock: (() -> Void)? { get set }
+    var failedToGetCityNameBlock: (() -> Void)? { get set }
     func getWeatherDataForCoordinates(latitude: Double, longitude: Double)
     func getCityNameByCoordinates(latitude: Double, longitude: Double)
     func showMapScreen(delegate: MapViewControllerDelegate)
     func showSearchScreen(delegate: SearchViewControllerDelegate)
     func requestCurrentLocation()
+    func openSettings()
 }
 
 class MainViewModel: NSObject, MainViewModelInterface {
     
     var reloadHourlyCollectionViewBlock: (() -> Void)?
     var reloadDailyTableViewBlock: (() -> Void)?
+    var hideMainUIBlock: (() -> Void)?
+    var showMainUIBlock: (() -> Void)? 
     var updateCityNameBlock: ((String?) -> Void)?
     var updateDateLabelBlock: ((String?) -> Void)?
     var updateMainWeatherImageBlock: ((UIImage?) -> Void)?
     var updateTemperatureDetailViewBlock: ((String?) -> Void)?
     var updateHumidityDetailViewBlock: ((String?) -> Void)?
     var updateWindDetailViewBlock: ((String?, UIImage?) -> Void)?
+    var dailyDataAlertBlock: (() -> Void)?
+    var locationAccessAlertBlock: (() -> Void)?
+    var locationErrorAlertBlock: (() -> Void)?
+    var failedToGetWeatherBlock: (() -> Void)?
+    var failedToGetCityNameBlock: (() -> Void)?
     
     private let locationManager = CLLocationManager()
+    private let geocodingManager = GeocodingManager()
+    private let networkingWeatherManager = NetworkingWeatherManager()
     
     weak var coordinator: MainCoordinatorInteface?
     
@@ -64,6 +81,7 @@ class MainViewModel: NSObject, MainViewModelInterface {
     }
     
     func requestCurrentLocation() {
+        hideMainUIBlock?()
         locationManager.requestLocation()
     }
     
@@ -73,7 +91,6 @@ class MainViewModel: NSObject, MainViewModelInterface {
         reloadDailyTableViewBlock?()
     }
     
-    #warning("consider renaming this View")
     private func updateMainWeatherView(data: WeatherDataModel.Daily?) {
         guard let dailyData = data else {
             return
@@ -133,25 +150,40 @@ class MainViewModel: NSObject, MainViewModelInterface {
     }
     
     func getWeatherDataForCoordinates(latitude: Double, longitude: Double) {
-        #warning("rework using instance")
-        NetworkingWeatherManager().getWeatherData(latitude: latitude, longitude: longitude) {
-            weatherData, error in
+        hideMainUIBlock?()
+        networkingWeatherManager.getWeatherData(latitude: latitude, longitude: longitude) { [weak self]  weatherData, error in
             guard let error = error else {
-                self.weatherDataModel = weatherData
+                self?.weatherDataModel = weatherData
+                self?.showMainUIBlock?()
                 return
             }
-            print(error)
+            self?.failedToGetWeatherBlock?()
+            self?.showMainUIBlock?()
+            print(error.localizedDescription)
         }
     }
     
     func getCityNameByCoordinates(latitude: Double, longitude: Double) {
-        #warning("rework using instance")
-        GeocodingManager().convertCoordinatesToCityName(lat: latitude, lon: longitude) { [weak self] cityName, error in
+        geocodingManager.convertCoordinatesToCityName(lat: latitude, lon: longitude) { [weak self] cityName, error in
+            guard cityName != nil else {
+                self?.updateCityNameBlock?("Unknown location")
+                return
+            }
             guard let error = error else {
                 self?.updateCityNameBlock?(cityName)
                 return
             }
-            print(error)
+            self?.failedToGetCityNameBlock?()
+            print(error.localizedDescription)
+        }
+    }
+    
+    func openSettings() {
+        guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
+            return
+        }
+        if UIApplication.shared.canOpenURL(settingsUrl) {
+            UIApplication.shared.open(settingsUrl)
         }
     }
     
@@ -160,7 +192,9 @@ class MainViewModel: NSObject, MainViewModelInterface {
 extension MainViewModel: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last else {
+        guard let location = locations.first else {
+            locationManager.stopUpdatingLocation()
+            locationErrorAlertBlock?()
             return
         }
         locationManager.stopUpdatingLocation()
@@ -176,10 +210,22 @@ extension MainViewModel: CLLocationManagerDelegate {
             locationManager.requestWhenInUseAuthorization()
             locationManager.requestLocation()
         case .denied, .restricted:
-            print("denied, restricted \(error)")
+            locationAccessAlertBlock?()
         case .authorizedAlways, .authorizedWhenInUse:
-            print("authorizedAlways, authorizedWhenInUse \(error)")
+            locationErrorAlertBlock?()
         @unknown default:
+            break
+        }
+        print(error.localizedDescription)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        switch status {
+        case .notDetermined, .denied, .restricted:
+            locationAccessAlertBlock?()
+        case .authorizedWhenInUse, .authorized, .authorizedAlways:
+            locationManager.requestLocation()
+        default:
             break
         }
     }
@@ -191,7 +237,6 @@ extension MainViewModel: CLLocationManagerDelegate {
 extension MainViewModel {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        #warning("move to constant")
         return 24
     }
     
@@ -248,7 +293,7 @@ extension MainViewModel {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let cellModel = weatherDataModel?.daily[indexPath.row] else {
-            #warning("error handling?")
+            dailyDataAlertBlock?()
             return
         }
         updateMainWeatherView(data: cellModel)
